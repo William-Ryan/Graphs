@@ -139,7 +139,7 @@ class Graph:
         # copy path so we don't mutate the original path
                     path_copy = current_path[:]
                     path_copy.append(neighbor)
-        # add to  queue
+        # add to queue
                     que.enqueue(current_path + [neighbor])
 
     def dfs(self, starting_vertex, destination_vertex):
