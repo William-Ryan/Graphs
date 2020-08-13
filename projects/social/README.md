@@ -52,7 +52,7 @@ A: You would call it a total of 500 times. 100 users with an average of 10 frien
 
 2. If you create 1000 users with an average of 5 random friends each, what percentage of other users will be in a particular user's extended social network? What is the average degree of separation between a user and those in his/her extended network?
 
-
+A: the average degree of separation is around 5 to 6. We get that number by taking the amount of total connections divided by the length of connections the person has.
 
 ## 4. Stretch Goal
 
