@@ -1,3 +1,21 @@
+import random
+
+class Queue():
+    def __init__(self):
+        self.queue = []
+
+    def enqueue(self, value):
+        self.queue.append(value)
+
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+
+    def size(self):
+        return len(self.queue)
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -7,6 +25,10 @@ class SocialGraph:
         self.last_id = 0
         self.users = {}
         self.friendships = {}
+
+    
+    def get_neighbors(self, friend_id):
+        return self.friendships[friend_id]
 
     def add_friendship(self, user_id, friend_id):
         """
@@ -45,8 +67,30 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for i in range(0, num_users):
+            self.add_user(f"User {i + 1}")
 
         # Create friendships
+        # generate all possible friendship combinations
+        possible_friendships = []
+
+        # avoid dups by ensuring first num < second num
+        for user_id in self.users: 
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
+
+        # shuffle friendships
+        random.shuffle(possible_friendships)
+
+        # create friendships for the first N pairs of the list
+        # N -> num_users * avg_friendships // 2
+        N = num_users * avg_friendships // 2
+        for i in range(N):
+            friendship = possible_friendships[i]
+            # user_id, friend_id = friendship
+            user_id = friendship[0]
+            friend_id = friendship[1]
+            self.add_friendship(user_id, friend_id)
 
     def get_all_social_paths(self, user_id):
         """
@@ -59,12 +103,27 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        q = Queue()
+        q.enqueue([user_id])
+
+        while q.size() > 0:
+            current = q.dequeue()
+            vertex = current[-1]
+            if vertex not in visited:
+                visited[vertex] = current
+                for neighbor in self.get_neighbors(vertex):
+                    q.enqueue(current+[neighbor])
         return visited
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
+    sg.populate_graph(1000, 5)
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
+    total = 0
+    for user in connections:
+        total += len(connections[user])
+    average_separation = total/len(connections)
+    print('average degree of separation :', average_separation)
